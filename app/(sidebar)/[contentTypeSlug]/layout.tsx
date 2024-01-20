@@ -1,6 +1,6 @@
 import { TopBar } from "@/app/(sidebar)/[contentTypeSlug]/top-bar";
 import { Input } from "@/components/ui/input";
-import { getCategories } from "@/modules/notion";
+import { getCategories } from "@/modules/notion/categories";
 import { allContentTypes } from "@/types";
 import { notFound } from "next/navigation";
 import { PropsWithChildren } from "react";
