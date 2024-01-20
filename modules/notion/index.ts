@@ -13,19 +13,28 @@ export async function getCategories() {
   });
   const categories: Category[] = [];
   const results = response.results.filter((result): result is PageObjectResponse => "properties" in result);
-  for (const row of results) {
-    const { properties } = row;
+  return results.map(transform);
+}
 
-    invariant(properties["Name"].type === "title", "Title should be of type title");
-    invariant(properties["Slug"].type === "rich_text", "Slug should be of type rich text");
-    invariant(properties["Slug"].rich_text.length > 0, `Slug should exist for ${row.id}`);
+export async function getCategoryBySlug(slug: string) {
+  const response = await notion.databases.query({
+    database_id: notionConstants.categoriesDatabaseId,
+    filter: { property: "Slug", rich_text: { equals: slug } },
+  });
+  if (response.results.length === 0) return null;
+  return transform(response.results[0] as PageObjectResponse);
+}
 
-    categories.push({
-      id: row.id,
-      name: properties["Name"].title[0].plain_text,
-      slug: properties["Slug"].rich_text[0].plain_text,
-    });
-  }
+function transform(row: PageObjectResponse): Category {
+  // invariant("properties" in row, "Response must contain properties");
+  const { properties } = row;
+  invariant(properties["Name"].type === "title", "Title should be of type title");
+  invariant(properties["Slug"].type === "rich_text", "Slug should be of type rich text");
+  invariant(properties["Slug"].rich_text.length > 0, `Slug should exist for ${row.id}`);
 
-  return categories;
+  return {
+    id: row.id,
+    name: properties["Name"].title[0].plain_text,
+    slug: properties["Slug"].rich_text[0].plain_text,
+  };
 }
