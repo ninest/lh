@@ -19,11 +19,11 @@ export default async function Layout({ params, children }: Props) {
 
   return (
     <>
-      <section className="p-4 grid grid-cols-[1fr,20rem] min-w-0">
+      <section className="p-4 grid grid-cols-1 md:grid-cols-[1fr,20rem] min-w-0">
         <div className="min-w-0 flex items-center">
           <TopBar contentType={contentType} categories={categories} />
         </div>
-        <Input placeholder={`Search ${contentType.name.toLowerCase()} ...`} />
+        <Input placeholder={`Search ${contentType.name.toLowerCase()} ...`} className="hidden md:block" />
       </section>
       <div>{children}</div>
     </>
