@@ -27,5 +27,5 @@ export async function getCategories() {
     });
   }
 
-  console.log(categories);
+  return categories;
 }
